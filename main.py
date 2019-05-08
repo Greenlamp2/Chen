@@ -32,7 +32,7 @@ class MyClient(discord.Client):
             if not location:
                 await message.channel.send('Je ne connais pas ce pokéstop')
             else:
-                await message.channel.send('%s' % location.itineraire)
+                await message.channel.send('%s: %s' % (location.name, location.itineraire))
 
 def main():
     client = MyClient()
