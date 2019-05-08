@@ -7,6 +7,10 @@ class PokestopsHandler:
 
     def get_position(self, name):
         for pokestop in self.pokestops:
+            if name.upper() == pokestop.name.upper():
+                return pokestop
+
+        for pokestop in self.pokestops:
             if name.upper() in pokestop.name.upper():
                 return pokestop
 
