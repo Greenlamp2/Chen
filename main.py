@@ -3,6 +3,8 @@ import discord
 from os.path import join, dirname
 from dotenv import load_dotenv
 
+from locator import Locator
+
 dotenv_path = join(dirname(__file__), '.auth')
 load_dotenv(dotenv_path)
 
@@ -10,6 +12,7 @@ CLIENT_ID = os.environ.get("CLIENT_ID")
 CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
 TOKEN = os.environ.get("TOKEN")
 
+locator = Locator()
 
 class MyClient(discord.Client):
     async def on_ready(self):
@@ -23,9 +26,13 @@ class MyClient(discord.Client):
         if message.author.id == self.user.id:
             return
 
-        if message.content.startswith('!hello'):
-            print('Message from {0.author}: {0.content}'.format(message))
-            await message.channel.send('Hello {0.author.mention}'.format(message))
+        if message.content.startswith('!where'):
+            name = message.content[7:]
+            location = locator.get_position(name)
+            if not location:
+                await message.channel.send('Je ne connais pas ce pokéstop')
+            else:
+                await message.channel.send('%s' % location.itineraire)
 
 def main():
     client = MyClient()
