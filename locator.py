@@ -10,7 +10,7 @@ class Locator:
         self.load()
 
     def load(self):
-        with open('export.csv') as csv_file:
+        with open('export.csv', encoding="utf8") as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=',')
             for row in csv_reader:
                 pokestop = Pokestop(row[0], row[1], row[2])

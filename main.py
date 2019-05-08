@@ -18,10 +18,9 @@ debug = True
 
 
 class MyClient(discord.Client):
-    def __init__(self, debug=False):
+    def __init__(self, _debug=False):
         super(MyClient, self).__init__()
-        self.debug = True
-
+        self.debug = _debug
 
     async def on_ready(self):
         print('Logged in as')
