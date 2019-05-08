@@ -11,10 +11,18 @@ load_dotenv(dotenv_path)
 CLIENT_ID = os.environ.get("CLIENT_ID")
 CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
 TOKEN = os.environ.get("TOKEN")
+FAKE_TOKEN = os.environ.get("FAKE_TOKEN")
 
 locator = Locator()
+debug = True
+
 
 class MyClient(discord.Client):
+    def __init__(self, debug=False):
+        super(MyClient, self).__init__()
+        self.debug = True
+
+
     async def on_ready(self):
         print('Logged in as')
         print(self.user.name)
@@ -23,6 +31,9 @@ class MyClient(discord.Client):
 
     async def on_message(self, message):
         # we do not want the bot to reply to itself
+        if self.debug:
+            if "Greenlamp" not in message.author.name:
+                return
         if message.author.id == self.user.id:
             return
 
@@ -34,9 +45,11 @@ class MyClient(discord.Client):
             else:
                 await message.channel.send('%s: %s' % (location.name, location.itineraire))
 
+
 def main():
-    client = MyClient()
-    client.run(TOKEN)
+    client = MyClient(debug)
+    token = TOKEN if not debug else FAKE_TOKEN
+    client.run(token)
 
 
 if __name__ == '__main__':
