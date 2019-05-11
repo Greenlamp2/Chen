@@ -14,7 +14,7 @@ TOKEN = os.environ.get("TOKEN")
 FAKE_TOKEN = os.environ.get("FAKE_TOKEN")
 
 locator = Locator()
-debug = True
+debug = False
 
 
 class MyClient(discord.Client):

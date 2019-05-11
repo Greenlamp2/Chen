@@ -10,4 +10,5 @@ class Pokestop:
 
     @property
     def itineraire(self):
-        return 'https://www.google.com/maps/dir/%s,%s/@%s,%sz' % (self.lat, self.long, self.lat, self.long)
+        # return 'https://www.google.com/maps/dir/%s,%s/@%s,%sz' % (self.lat, self.long, self.lat, self.long)
+        return 'https://www.google.com/maps/search/?api=1&query=%s,%s' % (self.lat, self.long)
