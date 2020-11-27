@@ -1,6 +1,10 @@
 import os
+import time
+
 import discord
 from os.path import join, dirname
+
+from discord import Guild
 from dotenv import load_dotenv
 
 from locator import Locator
@@ -11,7 +15,6 @@ load_dotenv(dotenv_path)
 CLIENT_ID = os.environ.get("CLIENT_ID")
 CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
 TOKEN = os.environ.get("TOKEN")
-FAKE_TOKEN = os.environ.get("FAKE_TOKEN")
 
 locator = Locator()
 debug = False
@@ -27,6 +30,17 @@ class MyClient(discord.Client):
         print(self.user.name)
         print(self.user.id)
         print('------')
+
+    async def fun(self, message):
+        content = message.content
+        channel = message.channel
+
+        def check(reaction, user):
+            if reaction.message == message and user.id != message.author.id:
+                return reaction, user
+
+        reaction, user = await self.wait_for('reaction_add', check=check)
+        return reaction
 
     async def on_message(self, message):
         # we do not want the bot to reply to itself
@@ -44,11 +58,18 @@ class MyClient(discord.Client):
             else:
                 await message.channel.send('%s: %s' % (location.name, location.itineraire))
 
+        if message.content.startswith('!pfc'):
+            moves = ["🪨", "🍃", "✂️"]
+            msg = await message.author.send("choose.")
+            for move in moves:
+                await msg.add_reaction(move)
+            reaction = await self.fun(msg)
+            await msg.delete()
+            await message.author.send("you chose {}.".format(reaction))
 
 def main():
     client = MyClient(debug)
-    token = TOKEN if not debug else FAKE_TOKEN
-    client.run(token)
+    client.run(TOKEN)
 
 
 if __name__ == '__main__':
